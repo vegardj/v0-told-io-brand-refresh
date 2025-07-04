@@ -1,8 +1,28 @@
 {
-  "name": "told.io - Debate Resolution Platform",
+  "name": "told.io - Settle Debates with Facts",
   "short_name": "told.io",
   "description": "The definitive platform for resolving debates with facts and community wisdom",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "orientation": "portrait-primary",
   "icons": [
+    {
+      "src": "/favicon-16x16.png",
+      "sizes": "16x16",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
     {
       "src": "/android-chrome-192x192.png",
       "sizes": "192x192",
@@ -14,9 +34,7 @@
       "type": "image/png"
     }
   ],
-  "theme_color": "#2563eb",
-  "background_color": "#ffffff",
-  "display": "standalone",
-  "start_url": "/",
-  "scope": "/"
+  "categories": ["social", "productivity", "education"],
+  "lang": "en-US",
+  "dir": "ltr"
 }

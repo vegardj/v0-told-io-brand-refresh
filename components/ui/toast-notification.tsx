@@ -151,3 +151,6 @@ function ToastItem({ toast, onRemove }: { toast: Toast; onRemove: () => void }) 
     </div>
   )
 }
+
+// Alias so other modules can import { ToastNotification }
+export { ToastProvider as ToastNotification }
