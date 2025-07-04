@@ -1,0 +1,22 @@
+{
+  "name": "told.io - Debate Resolution Platform",
+  "short_name": "told.io",
+  "description": "The definitive platform for resolving debates with facts and community wisdom",
+  "icons": [
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#2563eb",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "start_url": "/",
+  "scope": "/"
+}
