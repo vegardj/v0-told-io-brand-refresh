@@ -8,20 +8,21 @@ import {
   Palette,
   Type,
   Layout,
-  MessageSquare,
-  Users,
-  TrendingUp,
   Copy,
   Check,
   Download,
   Eye,
   EyeOff,
-  Volume2,
+  Moon,
+  Sun,
+  Monitor,
+  Contrast,
 } from "lucide-react"
 import { useState } from "react"
 
 export default function BrandStyleGuide() {
   const [copiedColor, setCopiedColor] = useState<string | null>(null)
+  const [darkMode, setDarkMode] = useState(false)
 
   const copyToClipboard = (text: string, id: string) => {
     navigator.clipboard.writeText(text)
@@ -29,7 +30,7 @@ export default function BrandStyleGuide() {
     setTimeout(() => setCopiedColor(null), 2000)
   }
 
-  const colorPalette = {
+  const lightColorPalette = {
     primary: {
       name: "Primary Blue",
       hex: "#2563eb",
@@ -74,7 +75,78 @@ export default function BrandStyleGuide() {
     },
   }
 
-  const gradients = [
+  const darkColorPalette = {
+    primary: {
+      name: "Primary Blue (Dark)",
+      hex: "#3b82f6",
+      rgb: "rgb(59, 130, 246)",
+      hsl: "hsl(217, 91%, 60%)",
+      usage: "Primary actions, links, brand elements",
+    },
+    secondary: {
+      name: "Primary Purple (Dark)",
+      hex: "#8b5cf6",
+      rgb: "rgb(139, 92, 246)",
+      hsl: "hsl(262, 83%, 66%)",
+      usage: "Secondary actions, gradients, accents",
+    },
+    neutral: {
+      name: "Neutral Gray (Dark)",
+      hex: "#94a3b8",
+      rgb: "rgb(148, 163, 184)",
+      hsl: "hsl(215, 20%, 65%)",
+      usage: "Text, borders, subtle backgrounds",
+    },
+    success: {
+      name: "Success Green (Dark)",
+      hex: "#10b981",
+      rgb: "rgb(16, 185, 129)",
+      hsl: "hsl(160, 84%, 39%)",
+      usage: "Success states, positive feedback",
+    },
+    warning: {
+      name: "Warning Orange (Dark)",
+      hex: "#f59e0b",
+      rgb: "rgb(245, 158, 11)",
+      hsl: "hsl(43, 96%, 56%)",
+      usage: "Warnings, caution states",
+    },
+    error: {
+      name: "Error Red (Dark)",
+      hex: "#ef4444",
+      rgb: "rgb(239, 68, 68)",
+      hsl: "hsl(0, 84%, 60%)",
+      usage: "Errors, destructive actions",
+    },
+  }
+
+  const darkModeBackgrounds = {
+    primary: {
+      name: "Primary Background",
+      hex: "#0f172a",
+      rgb: "rgb(15, 23, 42)",
+      hsl: "hsl(222, 47%, 11%)",
+      usage: "Main page background",
+    },
+    secondary: {
+      name: "Secondary Background",
+      hex: "#1e293b",
+      rgb: "rgb(30, 41, 59)",
+      hsl: "hsl(215, 25%, 17%)",
+      usage: "Card backgrounds, elevated surfaces",
+    },
+    tertiary: {
+      name: "Tertiary Background",
+      hex: "#334155",
+      rgb: "rgb(51, 65, 85)",
+      hsl: "hsl(215, 25%, 27%)",
+      usage: "Hover states, subtle emphasis",
+    },
+  }
+
+  const currentPalette = darkMode ? darkColorPalette : lightColorPalette
+
+  const lightGradients = [
     {
       name: "Primary Gradient",
       css: "linear-gradient(135deg, #2563eb 0%, #7c3aed 100%)",
@@ -91,6 +163,26 @@ export default function BrandStyleGuide() {
       usage: "Card backgrounds, content areas",
     },
   ]
+
+  const darkGradients = [
+    {
+      name: "Primary Gradient (Dark)",
+      css: "linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)",
+      usage: "Primary buttons, hero sections, brand elements",
+    },
+    {
+      name: "Background Gradient (Dark)",
+      css: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)",
+      usage: "Page backgrounds, subtle overlays",
+    },
+    {
+      name: "Card Gradient (Dark)",
+      css: "linear-gradient(135deg, #1e293b 0%, #334155 100%)",
+      usage: "Card backgrounds, content areas",
+    },
+  ]
+
+  const currentGradients = darkMode ? darkGradients : lightGradients
 
   const typography = {
     primary: {
@@ -123,9 +215,19 @@ export default function BrandStyleGuide() {
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
+    <div
+      className={`min-h-screen transition-colors duration-300 ${
+        darkMode
+          ? "bg-gradient-to-br from-slate-900 via-slate-800 to-blue-900 text-white"
+          : "bg-gradient-to-br from-slate-50 via-white to-blue-50 text-gray-900"
+      }`}
+    >
       {/* Header */}
-      <div className="bg-white border-b sticky top-0 z-50 backdrop-blur-sm bg-white/90">
+      <div
+        className={`border-b sticky top-0 z-50 backdrop-blur-sm transition-colors duration-300 ${
+          darkMode ? "bg-slate-900/90 border-slate-700" : "bg-white/90 border-gray-200"
+        }`}
+      >
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
@@ -136,13 +238,24 @@ export default function BrandStyleGuide() {
                 <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                   told.io
                 </h1>
-                <p className="text-sm text-gray-500">Brand Style Guide</p>
+                <p className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-500"}`}>Brand Style Guide</p>
               </div>
             </div>
-            <Button className="bg-gradient-to-r from-blue-600 to-purple-600">
-              <Download className="w-4 h-4 mr-2" />
-              Download Guide
-            </Button>
+            <div className="flex items-center gap-3">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setDarkMode(!darkMode)}
+                className={darkMode ? "border-slate-600 hover:bg-slate-800" : ""}
+              >
+                {darkMode ? <Sun className="w-4 h-4 mr-2" /> : <Moon className="w-4 h-4 mr-2" />}
+                {darkMode ? "Light" : "Dark"}
+              </Button>
+              <Button className="bg-gradient-to-r from-blue-600 to-purple-600">
+                <Download className="w-4 h-4 mr-2" />
+                Download Guide
+              </Button>
+            </div>
           </div>
         </div>
       </div>
@@ -150,14 +263,14 @@ export default function BrandStyleGuide() {
       <div className="container mx-auto px-6 py-12 max-w-6xl">
         {/* Brand Overview */}
         <section className="mb-16">
-          <Card>
+          <Card className={darkMode ? "bg-slate-800 border-slate-700" : ""}>
             <CardHeader>
               <CardTitle className="text-3xl">Brand Overview</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               <div>
                 <h3 className="text-xl font-semibold mb-3">Mission Statement</h3>
-                <p className="text-gray-700 leading-relaxed">
+                <p className={`leading-relaxed ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
                   told.io empowers communities to resolve debates through evidence-based discussion and collective
                   wisdom. We believe that truth emerges through respectful dialogue, factual evidence, and democratic
                   participation.
@@ -167,17 +280,29 @@ export default function BrandStyleGuide() {
               <div>
                 <h3 className="text-xl font-semibold mb-3">Brand Values</h3>
                 <div className="grid md:grid-cols-3 gap-4">
-                  <div className="p-4 bg-blue-50 rounded-lg">
-                    <h4 className="font-semibold text-blue-900 mb-2">Truth & Transparency</h4>
-                    <p className="text-sm text-blue-700">We prioritize facts and evidence over opinions and bias.</p>
+                  <div className={`p-4 rounded-lg ${darkMode ? "bg-blue-900/30" : "bg-blue-50"}`}>
+                    <h4 className={`font-semibold mb-2 ${darkMode ? "text-blue-300" : "text-blue-900"}`}>
+                      Truth & Transparency
+                    </h4>
+                    <p className={`text-sm ${darkMode ? "text-blue-200" : "text-blue-700"}`}>
+                      We prioritize facts and evidence over opinions and bias.
+                    </p>
                   </div>
-                  <div className="p-4 bg-purple-50 rounded-lg">
-                    <h4 className="font-semibold text-purple-900 mb-2">Community Wisdom</h4>
-                    <p className="text-sm text-purple-700">Collective intelligence leads to better outcomes.</p>
+                  <div className={`p-4 rounded-lg ${darkMode ? "bg-purple-900/30" : "bg-purple-50"}`}>
+                    <h4 className={`font-semibold mb-2 ${darkMode ? "text-purple-300" : "text-purple-900"}`}>
+                      Community Wisdom
+                    </h4>
+                    <p className={`text-sm ${darkMode ? "text-purple-200" : "text-purple-700"}`}>
+                      Collective intelligence leads to better outcomes.
+                    </p>
                   </div>
-                  <div className="p-4 bg-green-50 rounded-lg">
-                    <h4 className="font-semibold text-green-900 mb-2">Respectful Discourse</h4>
-                    <p className="text-sm text-green-700">Constructive dialogue builds understanding.</p>
+                  <div className={`p-4 rounded-lg ${darkMode ? "bg-green-900/30" : "bg-green-50"}`}>
+                    <h4 className={`font-semibold mb-2 ${darkMode ? "text-green-300" : "text-green-900"}`}>
+                      Respectful Discourse
+                    </h4>
+                    <p className={`text-sm ${darkMode ? "text-green-200" : "text-green-700"}`}>
+                      Constructive dialogue builds understanding.
+                    </p>
                   </div>
                 </div>
               </div>
@@ -195,7 +320,11 @@ export default function BrandStyleGuide() {
                     "Accessible",
                     "Democratic",
                   ].map((trait) => (
-                    <Badge key={trait} variant="secondary" className="bg-gray-100 text-gray-700">
+                    <Badge
+                      key={trait}
+                      variant="secondary"
+                      className={darkMode ? "bg-slate-700 text-slate-300" : "bg-gray-100 text-gray-700"}
+                    >
                       {trait}
                     </Badge>
                   ))}
@@ -205,9 +334,138 @@ export default function BrandStyleGuide() {
           </Card>
         </section>
 
+        {/* Dark Mode Section */}
+        <section className="mb-16">
+          <Card className={darkMode ? "bg-slate-800 border-slate-700" : ""}>
+            <CardHeader>
+              <CardTitle className="text-3xl flex items-center gap-3">
+                <Contrast className="w-8 h-8" />
+                Dark Mode Design System
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-8">
+              <div>
+                <h3 className="text-xl font-semibold mb-4">Theme Philosophy</h3>
+                <p className={`mb-6 ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
+                  Our dark mode maintains brand consistency while providing a comfortable viewing experience in
+                  low-light environments. We preserve the core brand identity through strategic color adjustments and
+                  enhanced contrast ratios.
+                </p>
+
+                <div className="grid md:grid-cols-3 gap-4">
+                  <div
+                    className={`p-4 border rounded-lg ${darkMode ? "bg-slate-700 border-slate-600" : "bg-white border-gray-200"}`}
+                  >
+                    <div className="flex items-center gap-2 mb-2">
+                      <Sun className="w-5 h-5 text-yellow-500" />
+                      <h4 className="font-semibold">Light Mode</h4>
+                    </div>
+                    <p className={`text-sm ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
+                      Clean, bright interface for daytime use and high-contrast environments
+                    </p>
+                  </div>
+                  <div
+                    className={`p-4 border rounded-lg ${darkMode ? "bg-slate-700 border-slate-600" : "bg-white border-gray-200"}`}
+                  >
+                    <div className="flex items-center gap-2 mb-2">
+                      <Moon className="w-5 h-5 text-blue-400" />
+                      <h4 className="font-semibold">Dark Mode</h4>
+                    </div>
+                    <p className={`text-sm ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
+                      Comfortable viewing for low-light conditions while maintaining readability
+                    </p>
+                  </div>
+                  <div
+                    className={`p-4 border rounded-lg ${darkMode ? "bg-slate-700 border-slate-600" : "bg-white border-gray-200"}`}
+                  >
+                    <div className="flex items-center gap-2 mb-2">
+                      <Monitor className="w-5 h-5 text-gray-500" />
+                      <h4 className="font-semibold">System</h4>
+                    </div>
+                    <p className={`text-sm ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
+                      Automatically adapts to user's system preference for seamless experience
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-xl font-semibold mb-4">Dark Mode Backgrounds</h3>
+                <div className="grid md:grid-cols-3 gap-4">
+                  {Object.entries(darkModeBackgrounds).map(([key, color]) => (
+                    <div key={key} className="border rounded-lg overflow-hidden bg-white">
+                      <div className="h-24 w-full" style={{ backgroundColor: color.hex }} />
+                      <div className="p-4">
+                        <h4 className="font-semibold mb-2 text-gray-900">{color.name}</h4>
+                        <div className="space-y-2 text-sm">
+                          <div className="flex items-center justify-between">
+                            <span className="text-gray-600">HEX</span>
+                            <button
+                              onClick={() => copyToClipboard(color.hex, `${key}-hex`)}
+                              className="font-mono text-xs bg-gray-100 px-2 py-1 rounded hover:bg-gray-200 flex items-center gap-1 text-gray-900"
+                            >
+                              {color.hex}
+                              {copiedColor === `${key}-hex` ? (
+                                <Check className="w-3 h-3" />
+                              ) : (
+                                <Copy className="w-3 h-3" />
+                              )}
+                            </button>
+                          </div>
+                        </div>
+                        <p className="text-xs text-gray-500 mt-3">{color.usage}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-xl font-semibold mb-4">Accessibility Standards</h3>
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div
+                    className={`p-4 border rounded-lg ${darkMode ? "border-green-700 bg-green-900/20" : "border-green-200 bg-green-50"}`}
+                  >
+                    <h4
+                      className={`font-semibold mb-3 flex items-center gap-2 ${darkMode ? "text-green-300" : "text-green-800"}`}
+                    >
+                      <Check className="w-4 h-4" />
+                      WCAG Compliance
+                    </h4>
+                    <ul className={`text-sm space-y-1 ${darkMode ? "text-green-200" : "text-green-700"}`}>
+                      <li>• Minimum 4.5:1 contrast ratio for normal text</li>
+                      <li>• Minimum 3:1 contrast ratio for large text</li>
+                      <li>• Enhanced contrast for interactive elements</li>
+                      <li>• Color-blind friendly palette</li>
+                      <li>• Focus indicators clearly visible</li>
+                    </ul>
+                  </div>
+                  <div
+                    className={`p-4 border rounded-lg ${darkMode ? "border-blue-700 bg-blue-900/20" : "border-blue-200 bg-blue-50"}`}
+                  >
+                    <h4
+                      className={`font-semibold mb-3 flex items-center gap-2 ${darkMode ? "text-blue-300" : "text-blue-800"}`}
+                    >
+                      <Eye className="w-4 h-4" />
+                      Visual Comfort
+                    </h4>
+                    <ul className={`text-sm space-y-1 ${darkMode ? "text-blue-200" : "text-blue-700"}`}>
+                      <li>• Reduced eye strain in low-light conditions</li>
+                      <li>• Smooth transitions between themes</li>
+                      <li>• Consistent visual hierarchy</li>
+                      <li>• Appropriate brightness levels</li>
+                      <li>• Readable typography at all sizes</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </section>
+
         {/* Logo & Visual Identity */}
         <section className="mb-16">
-          <Card>
+          <Card className={darkMode ? "bg-slate-800 border-slate-700" : ""}>
             <CardHeader>
               <CardTitle className="text-3xl flex items-center gap-3">
                 <Layout className="w-8 h-8" />
@@ -220,7 +478,10 @@ export default function BrandStyleGuide() {
                 <h3 className="text-xl font-semibold mb-4">Logo Variations</h3>
                 <div className="grid md:grid-cols-3 gap-6">
                   {logoVariations.map((logo, index) => (
-                    <div key={index} className="text-center p-6 border rounded-lg bg-white">
+                    <div
+                      key={index}
+                      className={`text-center p-6 border rounded-lg ${darkMode ? "bg-slate-700 border-slate-600" : "bg-white border-gray-200"}`}
+                    >
                       <div className="mb-4 flex justify-center">
                         {index === 0 && (
                           <div className="flex items-center space-x-3">
@@ -244,11 +505,54 @@ export default function BrandStyleGuide() {
                         )}
                       </div>
                       <h4 className="font-semibold mb-2">{logo.name}</h4>
-                      <p className="text-sm text-gray-600 mb-2">{logo.description}</p>
-                      <p className="text-xs text-gray-500">Min size: {logo.minSize}</p>
-                      <p className="text-xs text-gray-500 mt-1">{logo.usage}</p>
+                      <p className={`text-sm mb-2 ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
+                        {logo.description}
+                      </p>
+                      <p className={`text-xs ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
+                        Min size: {logo.minSize}
+                      </p>
+                      <p className={`text-xs mt-1 ${darkMode ? "text-gray-400" : "text-gray-500"}`}>{logo.usage}</p>
                     </div>
                   ))}
+                </div>
+              </div>
+
+              {/* Dark Mode Logo Guidelines */}
+              <div>
+                <h3 className="text-xl font-semibold mb-4">Dark Mode Logo Guidelines</h3>
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div className={`p-6 rounded-lg ${darkMode ? "bg-slate-900" : "bg-gray-900"}`}>
+                    <h4 className="font-semibold text-white mb-4">Logo on Dark Backgrounds</h4>
+                    <div className="flex items-center justify-center mb-4">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
+                          <Gavel className="w-6 h-6 text-white" />
+                        </div>
+                        <span className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+                          told.io
+                        </span>
+                      </div>
+                    </div>
+                    <p className="text-sm text-gray-300">
+                      Use slightly brighter gradient colors for better visibility on dark backgrounds
+                    </p>
+                  </div>
+                  <div className={`p-6 rounded-lg ${darkMode ? "bg-white" : "bg-white"}`}>
+                    <h4 className="font-semibold text-gray-900 mb-4">Logo on Light Backgrounds</h4>
+                    <div className="flex items-center justify-center mb-4">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+                          <Gavel className="w-6 h-6 text-white" />
+                        </div>
+                        <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                          told.io
+                        </span>
+                      </div>
+                    </div>
+                    <p className="text-sm text-gray-600">
+                      Use standard gradient colors for optimal contrast on light backgrounds
+                    </p>
+                  </div>
                 </div>
               </div>
 
@@ -256,30 +560,40 @@ export default function BrandStyleGuide() {
               <div>
                 <h3 className="text-xl font-semibold mb-4">Logo Usage Guidelines</h3>
                 <div className="grid md:grid-cols-2 gap-6">
-                  <div className="p-4 border border-green-200 bg-green-50 rounded-lg">
-                    <h4 className="font-semibold text-green-800 mb-3 flex items-center gap-2">
+                  <div
+                    className={`p-4 border rounded-lg ${darkMode ? "border-green-700 bg-green-900/20" : "border-green-200 bg-green-50"}`}
+                  >
+                    <h4
+                      className={`font-semibold mb-3 flex items-center gap-2 ${darkMode ? "text-green-300" : "text-green-800"}`}
+                    >
                       <Eye className="w-4 h-4" />
                       Do's
                     </h4>
-                    <ul className="text-sm text-green-700 space-y-1">
+                    <ul className={`text-sm space-y-1 ${darkMode ? "text-green-200" : "text-green-700"}`}>
                       <li>• Use the primary logo on light backgrounds</li>
                       <li>• Maintain minimum clear space (equal to the icon height)</li>
                       <li>• Use approved color variations only</li>
                       <li>• Ensure sufficient contrast for readability</li>
                       <li>• Scale proportionally to maintain aspect ratio</li>
+                      <li>• Adjust gradient brightness for dark themes</li>
                     </ul>
                   </div>
-                  <div className="p-4 border border-red-200 bg-red-50 rounded-lg">
-                    <h4 className="font-semibold text-red-800 mb-3 flex items-center gap-2">
+                  <div
+                    className={`p-4 border rounded-lg ${darkMode ? "border-red-700 bg-red-900/20" : "border-red-200 bg-red-50"}`}
+                  >
+                    <h4
+                      className={`font-semibold mb-3 flex items-center gap-2 ${darkMode ? "text-red-300" : "text-red-800"}`}
+                    >
                       <EyeOff className="w-4 h-4" />
                       Don'ts
                     </h4>
-                    <ul className="text-sm text-red-700 space-y-1">
+                    <ul className={`text-sm space-y-1 ${darkMode ? "text-red-200" : "text-red-700"}`}>
                       <li>• Don't stretch or distort the logo</li>
                       <li>• Don't use unauthorized colors</li>
                       <li>• Don't place on busy backgrounds</li>
                       <li>• Don't use below minimum size requirements</li>
                       <li>• Don't add effects, shadows, or outlines</li>
+                      <li>• Don't ignore theme-specific adjustments</li>
                     </ul>
                   </div>
                 </div>
@@ -290,7 +604,7 @@ export default function BrandStyleGuide() {
 
         {/* Color Palette */}
         <section className="mb-16">
-          <Card>
+          <Card className={darkMode ? "bg-slate-800 border-slate-700" : ""}>
             <CardHeader>
               <CardTitle className="text-3xl flex items-center gap-3">
                 <Palette className="w-8 h-8" />
@@ -298,77 +612,91 @@ export default function BrandStyleGuide() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-8">
-              <div>
-                <h3 className="text-xl font-semibold mb-4">Primary Colors</h3>
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {Object.entries(colorPalette).map(([key, color]) => (
-                    <div key={key} className="border rounded-lg overflow-hidden bg-white">
-                      <div className="h-24 w-full" style={{ backgroundColor: color.hex }} />
-                      <div className="p-4">
-                        <h4 className="font-semibold mb-2">{color.name}</h4>
-                        <div className="space-y-2 text-sm">
-                          <div className="flex items-center justify-between">
-                            <span className="text-gray-600">HEX</span>
-                            <button
-                              onClick={() => copyToClipboard(color.hex, `${key}-hex`)}
-                              className="font-mono text-xs bg-gray-100 px-2 py-1 rounded hover:bg-gray-200 flex items-center gap-1"
-                            >
-                              {color.hex}
-                              {copiedColor === `${key}-hex` ? (
-                                <Check className="w-3 h-3" />
-                              ) : (
-                                <Copy className="w-3 h-3" />
-                              )}
-                            </button>
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span className="text-gray-600">RGB</span>
-                            <button
-                              onClick={() => copyToClipboard(color.rgb, `${key}-rgb`)}
-                              className="font-mono text-xs bg-gray-100 px-2 py-1 rounded hover:bg-gray-200 flex items-center gap-1"
-                            >
-                              {color.rgb}
-                              {copiedColor === `${key}-rgb` ? (
-                                <Check className="w-3 h-3" />
-                              ) : (
-                                <Copy className="w-3 h-3" />
-                              )}
-                            </button>
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span className="text-gray-600">HSL</span>
-                            <button
-                              onClick={() => copyToClipboard(color.hsl, `${key}-hsl`)}
-                              className="font-mono text-xs bg-gray-100 px-2 py-1 rounded hover:bg-gray-200 flex items-center gap-1"
-                            >
-                              {color.hsl}
-                              {copiedColor === `${key}-hsl` ? (
-                                <Check className="w-3 h-3" />
-                              ) : (
-                                <Copy className="w-3 h-3" />
-                              )}
-                            </button>
-                          </div>
-                        </div>
-                        <p className="text-xs text-gray-500 mt-3">{color.usage}</p>
-                      </div>
-                    </div>
-                  ))}
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-xl font-semibold">{darkMode ? "Dark Mode Colors" : "Light Mode Colors"}</h3>
+                <div className="flex items-center gap-2 text-sm">
+                  <span className={darkMode ? "text-gray-400" : "text-gray-600"}>Toggle to see:</span>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setDarkMode(!darkMode)}
+                    className={darkMode ? "border-slate-600 hover:bg-slate-700" : ""}
+                  >
+                    {darkMode ? "Light Mode" : "Dark Mode"}
+                  </Button>
                 </div>
               </div>
 
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {Object.entries(currentPalette).map(([key, color]) => (
+                  <div key={key} className="border rounded-lg overflow-hidden bg-white">
+                    <div className="h-24 w-full" style={{ backgroundColor: color.hex }} />
+                    <div className="p-4">
+                      <h4 className="font-semibold mb-2 text-gray-900">{color.name}</h4>
+                      <div className="space-y-2 text-sm">
+                        <div className="flex items-center justify-between">
+                          <span className="text-gray-600">HEX</span>
+                          <button
+                            onClick={() => copyToClipboard(color.hex, `${key}-hex`)}
+                            className="font-mono text-xs bg-gray-100 px-2 py-1 rounded hover:bg-gray-200 flex items-center gap-1 text-gray-900"
+                          >
+                            {color.hex}
+                            {copiedColor === `${key}-hex` ? (
+                              <Check className="w-3 h-3" />
+                            ) : (
+                              <Copy className="w-3 h-3" />
+                            )}
+                          </button>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-gray-600">RGB</span>
+                          <button
+                            onClick={() => copyToClipboard(color.rgb, `${key}-rgb`)}
+                            className="font-mono text-xs bg-gray-100 px-2 py-1 rounded hover:bg-gray-200 flex items-center gap-1 text-gray-900"
+                          >
+                            {color.rgb}
+                            {copiedColor === `${key}-rgb` ? (
+                              <Check className="w-3 h-3" />
+                            ) : (
+                              <Copy className="w-3 h-3" />
+                            )}
+                          </button>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-gray-600">HSL</span>
+                          <button
+                            onClick={() => copyToClipboard(color.hsl, `${key}-hsl`)}
+                            className="font-mono text-xs bg-gray-100 px-2 py-1 rounded hover:bg-gray-200 flex items-center gap-1 text-gray-900"
+                          >
+                            {color.hsl}
+                            {copiedColor === `${key}-hsl` ? (
+                              <Check className="w-3 h-3" />
+                            ) : (
+                              <Copy className="w-3 h-3" />
+                            )}
+                          </button>
+                        </div>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-3">{color.usage}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
               <div>
-                <h3 className="text-xl font-semibold mb-4">Gradients</h3>
+                <h3 className="text-xl font-semibold mb-4">
+                  {darkMode ? "Dark Mode Gradients" : "Light Mode Gradients"}
+                </h3>
                 <div className="space-y-4">
-                  {gradients.map((gradient, index) => (
+                  {currentGradients.map((gradient, index) => (
                     <div key={index} className="border rounded-lg overflow-hidden bg-white">
                       <div className="h-16 w-full" style={{ background: gradient.css }} />
                       <div className="p-4">
                         <div className="flex items-center justify-between mb-2">
-                          <h4 className="font-semibold">{gradient.name}</h4>
+                          <h4 className="font-semibold text-gray-900">{gradient.name}</h4>
                           <button
                             onClick={() => copyToClipboard(gradient.css, `gradient-${index}`)}
-                            className="text-xs bg-gray-100 px-2 py-1 rounded hover:bg-gray-200 flex items-center gap-1"
+                            className="text-xs bg-gray-100 px-2 py-1 rounded hover:bg-gray-200 flex items-center gap-1 text-gray-900"
                           >
                             Copy CSS
                             {copiedColor === `gradient-${index}` ? (
@@ -378,11 +706,63 @@ export default function BrandStyleGuide() {
                             )}
                           </button>
                         </div>
-                        <code className="text-xs bg-gray-50 p-2 rounded block mb-2 font-mono">{gradient.css}</code>
+                        <code className="text-xs bg-gray-50 p-2 rounded block mb-2 font-mono text-gray-900">
+                          {gradient.css}
+                        </code>
                         <p className="text-xs text-gray-500">{gradient.usage}</p>
                       </div>
                     </div>
                   ))}
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-xl font-semibold mb-4">Color Usage Matrix</h3>
+                <div className="overflow-x-auto">
+                  <table
+                    className={`w-full text-sm border rounded-lg ${darkMode ? "border-slate-600" : "border-gray-200"}`}
+                  >
+                    <thead className={darkMode ? "bg-slate-700" : "bg-gray-50"}>
+                      <tr>
+                        <th className="text-left p-3 font-semibold">Element</th>
+                        <th className="text-left p-3 font-semibold">Light Mode</th>
+                        <th className="text-left p-3 font-semibold">Dark Mode</th>
+                        <th className="text-left p-3 font-semibold">Usage</th>
+                      </tr>
+                    </thead>
+                    <tbody className={`divide-y ${darkMode ? "divide-slate-600" : "divide-gray-200"}`}>
+                      <tr>
+                        <td className="p-3 font-medium">Primary Text</td>
+                        <td className="p-3">#1f2937</td>
+                        <td className="p-3">#f8fafc</td>
+                        <td className="p-3">Main content, headings</td>
+                      </tr>
+                      <tr>
+                        <td className="p-3 font-medium">Secondary Text</td>
+                        <td className="p-3">#64748b</td>
+                        <td className="p-3">#94a3b8</td>
+                        <td className="p-3">Descriptions, metadata</td>
+                      </tr>
+                      <tr>
+                        <td className="p-3 font-medium">Background</td>
+                        <td className="p-3">#ffffff</td>
+                        <td className="p-3">#0f172a</td>
+                        <td className="p-3">Page backgrounds</td>
+                      </tr>
+                      <tr>
+                        <td className="p-3 font-medium">Surface</td>
+                        <td className="p-3">#f8fafc</td>
+                        <td className="p-3">#1e293b</td>
+                        <td className="p-3">Cards, panels</td>
+                      </tr>
+                      <tr>
+                        <td className="p-3 font-medium">Border</td>
+                        <td className="p-3">#e2e8f0</td>
+                        <td className="p-3">#334155</td>
+                        <td className="p-3">Dividers, outlines</td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </CardContent>
@@ -391,7 +771,7 @@ export default function BrandStyleGuide() {
 
         {/* Typography */}
         <section className="mb-16">
-          <Card>
+          <Card className={darkMode ? "bg-slate-800 border-slate-700" : ""}>
             <CardHeader>
               <CardTitle className="text-3xl flex items-center gap-3">
                 <Type className="w-8 h-8" />
@@ -401,26 +781,32 @@ export default function BrandStyleGuide() {
             <CardContent className="space-y-8">
               <div>
                 <h3 className="text-xl font-semibold mb-4">Primary Typeface</h3>
-                <div className="border rounded-lg p-6 bg-white">
+                <div
+                  className={`border rounded-lg p-6 ${darkMode ? "bg-slate-700 border-slate-600" : "bg-white border-gray-200"}`}
+                >
                   <div className="mb-4">
                     <h4 className="text-2xl font-bold mb-2">Inter</h4>
-                    <p className="text-gray-600">Modern, clean, and highly legible sans-serif typeface</p>
+                    <p className={darkMode ? "text-gray-300" : "text-gray-600"}>
+                      Modern, clean, and highly legible sans-serif typeface
+                    </p>
                   </div>
 
                   <div className="grid md:grid-cols-2 gap-6 mb-6">
                     <div>
                       <h5 className="font-semibold mb-2">Available Weights</h5>
-                      <ul className="space-y-1 text-sm">
+                      <ul className={`space-y-1 text-sm ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
                         {typography.primary.weights.map((weight) => (
-                          <li key={weight} className="text-gray-600">
-                            • {weight}
-                          </li>
+                          <li key={weight}>• {weight}</li>
                         ))}
                       </ul>
                     </div>
                     <div>
                       <h5 className="font-semibold mb-2">Fallback Stack</h5>
-                      <code className="text-xs bg-gray-100 p-2 rounded block">{typography.primary.fallback}</code>
+                      <code
+                        className={`text-xs p-2 rounded block ${darkMode ? "bg-slate-600 text-gray-300" : "bg-gray-100 text-gray-900"}`}
+                      >
+                        {typography.primary.fallback}
+                      </code>
                     </div>
                   </div>
 
@@ -432,35 +818,45 @@ export default function BrandStyleGuide() {
                           <span className="text-5xl font-bold">Aa</span>
                           <div>
                             <div className="font-semibold">Display (48px)</div>
-                            <div className="text-sm text-gray-600">Hero headings, major titles</div>
+                            <div className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-600"}`}>
+                              Hero headings, major titles
+                            </div>
                           </div>
                         </div>
                         <div className="flex items-baseline gap-4">
                           <span className="text-3xl font-bold">Aa</span>
                           <div>
                             <div className="font-semibold">Heading 1 (30px)</div>
-                            <div className="text-sm text-gray-600">Page titles, section headers</div>
+                            <div className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-600"}`}>
+                              Page titles, section headers
+                            </div>
                           </div>
                         </div>
                         <div className="flex items-baseline gap-4">
                           <span className="text-xl font-semibold">Aa</span>
                           <div>
                             <div className="font-semibold">Heading 2 (20px)</div>
-                            <div className="text-sm text-gray-600">Subsection headers</div>
+                            <div className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-600"}`}>
+                              Subsection headers
+                            </div>
                           </div>
                         </div>
                         <div className="flex items-baseline gap-4">
                           <span className="text-base font-medium">Aa</span>
                           <div>
                             <div className="font-semibold">Body (16px)</div>
-                            <div className="text-sm text-gray-600">Main content, paragraphs</div>
+                            <div className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-600"}`}>
+                              Main content, paragraphs
+                            </div>
                           </div>
                         </div>
                         <div className="flex items-baseline gap-4">
                           <span className="text-sm">Aa</span>
                           <div>
                             <div className="font-semibold">Small (14px)</div>
-                            <div className="text-sm text-gray-600">Captions, metadata, labels</div>
+                            <div className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-600"}`}>
+                              Captions, metadata, labels
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -468,296 +864,169 @@ export default function BrandStyleGuide() {
                   </div>
                 </div>
               </div>
+
+              <div>
+                <h3 className="text-xl font-semibold mb-4">Dark Mode Typography Adjustments</h3>
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div
+                    className={`p-4 border rounded-lg ${darkMode ? "border-blue-700 bg-blue-900/20" : "border-blue-200 bg-blue-50"}`}
+                  >
+                    <h4 className={`font-semibold mb-3 ${darkMode ? "text-blue-300" : "text-blue-800"}`}>
+                      Contrast Enhancements
+                    </h4>
+                    <ul className={`text-sm space-y-1 ${darkMode ? "text-blue-200" : "text-blue-700"}`}>
+                      <li>• Increased letter spacing for better readability</li>
+                      <li>• Slightly heavier font weights for clarity</li>
+                      <li>• Enhanced line height for comfortable reading</li>
+                      <li>• Optimized color contrast ratios</li>
+                    </ul>
+                  </div>
+                  <div
+                    className={`p-4 border rounded-lg ${darkMode ? "border-purple-700 bg-purple-900/20" : "border-purple-200 bg-purple-50"}`}
+                  >
+                    <h4 className={`font-semibold mb-3 ${darkMode ? "text-purple-300" : "text-purple-800"}`}>
+                      Visual Hierarchy
+                    </h4>
+                    <ul className={`text-sm space-y-1 ${darkMode ? "text-purple-200" : "text-purple-700"}`}>
+                      <li>• Maintained relative contrast between text levels</li>
+                      <li>• Preserved brand gradient for headings</li>
+                      <li>• Consistent spacing and alignment</li>
+                      <li>• Clear distinction between interactive elements</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </section>
 
-        {/* Voice & Tone */}
+        {/* Implementation Guidelines */}
         <section className="mb-16">
-          <Card>
+          <Card className={darkMode ? "bg-slate-800 border-slate-700" : ""}>
             <CardHeader>
-              <CardTitle className="text-3xl flex items-center gap-3">
-                <Volume2 className="w-8 h-8" />
-                Voice & Tone
-              </CardTitle>
+              <CardTitle className="text-3xl">Dark Mode Implementation</CardTitle>
             </CardHeader>
             <CardContent className="space-y-8">
               <div>
-                <h3 className="text-xl font-semibold mb-4">Brand Voice</h3>
+                <h3 className="text-xl font-semibold mb-4">CSS Custom Properties</h3>
+                <div className={`p-4 rounded-lg ${darkMode ? "bg-slate-900" : "bg-gray-50"}`}>
+                  <pre className={`text-sm overflow-x-auto ${darkMode ? "text-gray-300" : "text-gray-800"}`}>
+                    {`:root {
+  /* Light mode colors */
+  --color-primary: #2563eb;
+  --color-secondary: #7c3aed;
+  --color-background: #ffffff;
+  --color-surface: #f8fafc;
+  --color-text-primary: #1f2937;
+  --color-text-secondary: #64748b;
+  --color-border: #e2e8f0;
+}
+
+[data-theme="dark"] {
+  /* Dark mode colors */
+  --color-primary: #3b82f6;
+  --color-secondary: #8b5cf6;
+  --color-background: #0f172a;
+  --color-surface: #1e293b;
+  --color-text-primary: #f8fafc;
+  --color-text-secondary: #94a3b8;
+  --color-border: #334155;
+}`}
+                  </pre>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-xl font-semibold mb-4">Tailwind CSS Configuration</h3>
+                <div className={`p-4 rounded-lg ${darkMode ? "bg-slate-900" : "bg-gray-50"}`}>
+                  <pre className={`text-sm overflow-x-auto ${darkMode ? "text-gray-300" : "text-gray-800"}`}>
+                    {`// tailwind.config.js
+module.exports = {
+  darkMode: 'class', // or 'media' for system preference
+  theme: {
+    extend: {
+      colors: {
+        primary: {
+          DEFAULT: '#2563eb',
+          dark: '#3b82f6',
+        },
+        secondary: {
+          DEFAULT: '#7c3aed',
+          dark: '#8b5cf6',
+        },
+        background: {
+          DEFAULT: '#ffffff',
+          dark: '#0f172a',
+        },
+        surface: {
+          DEFAULT: '#f8fafc',
+          dark: '#1e293b',
+        }
+      }
+    }
+  }
+}`}
+                  </pre>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-xl font-semibold mb-4">React Implementation</h3>
+                <div className={`p-4 rounded-lg ${darkMode ? "bg-slate-900" : "bg-gray-50"}`}>
+                  <pre className={`text-sm overflow-x-auto ${darkMode ? "text-gray-300" : "text-gray-800"}`}>
+                    {`// Theme context and hook
+const ThemeContext = createContext()
+
+export function ThemeProvider({ children }) {
+  const [theme, setTheme] = useState('light')
+  
+  useEffect(() => {
+    const root = document.documentElement
+    root.classList.toggle('dark', theme === 'dark')
+  }, [theme])
+  
+  return (
+    <ThemeContext.Provider value={{ theme, setTheme }}>
+      {children}
+    </ThemeContext.Provider>
+  )
+}
+
+export const useTheme = () => useContext(ThemeContext)`}
+                  </pre>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-xl font-semibold mb-4">Testing Checklist</h3>
                 <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <h4 className="font-semibold mb-3">We Are:</h4>
-                    <ul className="space-y-2 text-sm">
-                      <li className="flex items-start gap-2">
-                        <span className="text-green-600 mt-1">✓</span>
-                        <div>
-                          <strong>Authoritative but approachable</strong> - We speak with confidence while remaining
-                          accessible
-                        </div>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-green-600 mt-1">✓</span>
-                        <div>
-                          <strong>Clear and direct</strong> - We communicate complex ideas simply and effectively
-                        </div>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-green-600 mt-1">✓</span>
-                        <div>
-                          <strong>Respectful and inclusive</strong> - We value all perspectives and encourage civil
-                          discourse
-                        </div>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-green-600 mt-1">✓</span>
-                        <div>
-                          <strong>Evidence-based</strong> - We prioritize facts and data over opinions
-                        </div>
-                      </li>
+                  <div
+                    className={`p-4 border rounded-lg ${darkMode ? "border-green-700 bg-green-900/20" : "border-green-200 bg-green-50"}`}
+                  >
+                    <h4 className={`font-semibold mb-3 ${darkMode ? "text-green-300" : "text-green-800"}`}>
+                      Visual Testing
+                    </h4>
+                    <ul className={`text-sm space-y-1 ${darkMode ? "text-green-200" : "text-green-700"}`}>
+                      <li>• Test all components in both themes</li>
+                      <li>• Verify contrast ratios meet WCAG standards</li>
+                      <li>• Check focus states and interactive elements</li>
+                      <li>• Validate brand consistency across themes</li>
+                      <li>• Test on different screen sizes and devices</li>
                     </ul>
                   </div>
-                  <div>
-                    <h4 className="font-semibold mb-3">We Are Not:</h4>
-                    <ul className="space-y-2 text-sm">
-                      <li className="flex items-start gap-2">
-                        <span className="text-red-600 mt-1">✗</span>
-                        <div>
-                          <strong>Overly casual or informal</strong> - We maintain professionalism
-                        </div>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-red-600 mt-1">✗</span>
-                        <div>
-                          <strong>Biased or partisan</strong> - We remain neutral and fair
-                        </div>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-red-600 mt-1">✗</span>
-                        <div>
-                          <strong>Condescending or elitist</strong> - We welcome all knowledge levels
-                        </div>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <span className="text-red-600 mt-1">✗</span>
-                        <div>
-                          <strong>Aggressive or confrontational</strong> - We promote constructive dialogue
-                        </div>
-                      </li>
+                  <div
+                    className={`p-4 border rounded-lg ${darkMode ? "border-blue-700 bg-blue-900/20" : "border-blue-200 bg-blue-50"}`}
+                  >
+                    <h4 className={`font-semibold mb-3 ${darkMode ? "text-blue-300" : "text-blue-800"}`}>
+                      Functional Testing
+                    </h4>
+                    <ul className={`text-sm space-y-1 ${darkMode ? "text-blue-200" : "text-blue-700"}`}>
+                      <li>• Theme switching works smoothly</li>
+                      <li>• System preference detection functions</li>
+                      <li>• Theme persistence across sessions</li>
+                      <li>• No flash of unstyled content (FOUC)</li>
+                      <li>• Performance impact is minimal</li>
                     </ul>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-xl font-semibold mb-4">Tone Guidelines</h3>
-                <div className="grid md:grid-cols-3 gap-4">
-                  <div className="p-4 border rounded-lg">
-                    <h4 className="font-semibold mb-2 text-blue-700">Onboarding & Welcome</h4>
-                    <p className="text-sm text-gray-600 mb-2">Warm, encouraging, helpful</p>
-                    <div className="text-xs bg-blue-50 p-2 rounded">
-                      "Welcome to told.io! Ready to settle some debates with facts and community wisdom?"
-                    </div>
-                  </div>
-                  <div className="p-4 border rounded-lg">
-                    <h4 className="font-semibold mb-2 text-purple-700">Debate Content</h4>
-                    <p className="text-sm text-gray-600 mb-2">Neutral, factual, balanced</p>
-                    <div className="text-xs bg-purple-50 p-2 rounded">
-                      "Present your evidence and let the community evaluate the facts."
-                    </div>
-                  </div>
-                  <div className="p-4 border rounded-lg">
-                    <h4 className="font-semibold mb-2 text-green-700">Success States</h4>
-                    <p className="text-sm text-gray-600 mb-2">Celebratory, affirming</p>
-                    <div className="text-xs bg-green-50 p-2 rounded">
-                      "Great job! Your evidence helped resolve this debate."
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-xl font-semibold mb-4">Writing Guidelines</h3>
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="space-y-4">
-                    <div>
-                      <h4 className="font-semibold mb-2">Language Style</h4>
-                      <ul className="text-sm space-y-1 text-gray-700">
-                        <li>• Use active voice when possible</li>
-                        <li>• Write in second person ("you") for user-facing content</li>
-                        <li>• Keep sentences concise and scannable</li>
-                        <li>• Use parallel structure in lists</li>
-                        <li>• Avoid jargon and technical terms</li>
-                      </ul>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold mb-2">Punctuation & Grammar</h4>
-                      <ul className="text-sm space-y-1 text-gray-700">
-                        <li>• Use sentence case for headings</li>
-                        <li>• Oxford comma in lists</li>
-                        <li>• Periods in complete sentences</li>
-                        <li>• No periods in UI labels or buttons</li>
-                        <li>• Use em dashes (—) for breaks in thought</li>
-                      </ul>
-                    </div>
-                  </div>
-                  <div className="space-y-4">
-                    <div>
-                      <h4 className="font-semibold mb-2">Content Principles</h4>
-                      <ul className="text-sm space-y-1 text-gray-700">
-                        <li>• Lead with the most important information</li>
-                        <li>• Provide context for complex topics</li>
-                        <li>• Use examples to illustrate points</li>
-                        <li>• Include clear calls-to-action</li>
-                        <li>• Test content with real users</li>
-                      </ul>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold mb-2">Accessibility</h4>
-                      <ul className="text-sm space-y-1 text-gray-700">
-                        <li>• Write descriptive link text</li>
-                        <li>• Use clear, descriptive headings</li>
-                        <li>• Provide alt text for images</li>
-                        <li>• Ensure sufficient color contrast</li>
-                        <li>• Test with screen readers</li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </section>
-
-        {/* Iconography */}
-        <section className="mb-16">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-3xl flex items-center gap-3">
-                <MessageSquare className="w-8 h-8" />
-                Iconography
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div>
-                <h3 className="text-xl font-semibold mb-4">Icon System</h3>
-                <p className="text-gray-600 mb-6">
-                  We use Lucide React icons for consistency and clarity. Icons should be simple, recognizable, and
-                  aligned with our brand values.
-                </p>
-
-                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-                  {[
-                    { icon: Gavel, name: "Gavel", usage: "Primary brand icon, decisions, authority" },
-                    { icon: MessageSquare, name: "Message Square", usage: "Comments, discussions, debates" },
-                    { icon: Users, name: "Users", usage: "Community, participants, groups" },
-                    { icon: TrendingUp, name: "Trending Up", usage: "Popular content, growth, success" },
-                  ].map((item, index) => (
-                    <div key={index} className="text-center p-4 border rounded-lg bg-white">
-                      <div className="w-12 h-12 mx-auto mb-3 bg-gradient-to-br from-blue-100 to-purple-100 rounded-lg flex items-center justify-center">
-                        <item.icon className="w-6 h-6 text-blue-600" />
-                      </div>
-                      <h4 className="font-semibold text-sm mb-1">{item.name}</h4>
-                      <p className="text-xs text-gray-500">{item.usage}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-xl font-semibold mb-4">Icon Guidelines</h3>
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="p-4 border border-green-200 bg-green-50 rounded-lg">
-                    <h4 className="font-semibold text-green-800 mb-3">Best Practices</h4>
-                    <ul className="text-sm text-green-700 space-y-1">
-                      <li>• Use 16px, 20px, or 24px sizes for UI elements</li>
-                      <li>• Maintain consistent stroke width (1.5-2px)</li>
-                      <li>• Use semantic colors (blue for primary, gray for secondary)</li>
-                      <li>• Ensure icons are accessible with proper labels</li>
-                      <li>• Test icon recognition with users</li>
-                    </ul>
-                  </div>
-                  <div className="p-4 border border-red-200 bg-red-50 rounded-lg">
-                    <h4 className="font-semibold text-red-800 mb-3">Avoid</h4>
-                    <ul className="text-sm text-red-700 space-y-1">
-                      <li>• Mixing different icon styles or weights</li>
-                      <li>• Using icons without clear meaning</li>
-                      <li>• Overusing decorative icons</li>
-                      <li>• Icons smaller than 16px for interactive elements</li>
-                      <li>• Custom icons unless absolutely necessary</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </section>
-
-        {/* Applications */}
-        <section className="mb-16">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-3xl">Brand Applications</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-8">
-              <div>
-                <h3 className="text-xl font-semibold mb-4">Digital Applications</h3>
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <div className="p-4 border rounded-lg bg-white">
-                    <h4 className="font-semibold mb-2">Website</h4>
-                    <p className="text-sm text-gray-600 mb-3">Primary brand touchpoint</p>
-                    <ul className="text-xs text-gray-500 space-y-1">
-                      <li>• Use primary logo in header</li>
-                      <li>• Apply brand colors consistently</li>
-                      <li>• Maintain typography hierarchy</li>
-                      <li>• Follow voice and tone guidelines</li>
-                    </ul>
-                  </div>
-                  <div className="p-4 border rounded-lg bg-white">
-                    <h4 className="font-semibold mb-2">Social Media</h4>
-                    <p className="text-sm text-gray-600 mb-3">Community engagement</p>
-                    <ul className="text-xs text-gray-500 space-y-1">
-                      <li>• Use icon-only logo for profiles</li>
-                      <li>• Consistent visual style</li>
-                      <li>• Brand-appropriate tone</li>
-                      <li>• Engage respectfully</li>
-                    </ul>
-                  </div>
-                  <div className="p-4 border rounded-lg bg-white">
-                    <h4 className="font-semibold mb-2">Email</h4>
-                    <p className="text-sm text-gray-600 mb-3">Direct communication</p>
-                    <ul className="text-xs text-gray-500 space-y-1">
-                      <li>• Include logo in header</li>
-                      <li>• Use brand colors sparingly</li>
-                      <li>• Clear, actionable content</li>
-                      <li>• Professional tone</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-xl font-semibold mb-4">Content Guidelines</h3>
-                <div className="space-y-4">
-                  <div className="p-4 border rounded-lg bg-blue-50">
-                    <h4 className="font-semibold text-blue-900 mb-2">Debate Content</h4>
-                    <p className="text-sm text-blue-700">
-                      Maintain neutrality, encourage evidence-based arguments, and foster respectful dialogue. Use clear
-                      formatting and provide context for complex topics.
-                    </p>
-                  </div>
-                  <div className="p-4 border rounded-lg bg-purple-50">
-                    <h4 className="font-semibold text-purple-900 mb-2">Community Guidelines</h4>
-                    <p className="text-sm text-purple-700">
-                      Promote inclusive participation, set clear expectations for behavior, and provide resources for
-                      constructive debate techniques.
-                    </p>
-                  </div>
-                  <div className="p-4 border rounded-lg bg-green-50">
-                    <h4 className="font-semibold text-green-900 mb-2">Educational Content</h4>
-                    <p className="text-sm text-green-700">
-                      Create helpful guides, tutorials, and resources that empower users to participate effectively in
-                      debates and fact-checking.
-                    </p>
                   </div>
                 </div>
               </div>
@@ -766,11 +1035,14 @@ export default function BrandStyleGuide() {
         </section>
 
         {/* Footer */}
-        <div className="text-center py-8 border-t">
-          <p className="text-gray-600 mb-4">
-            This brand guide ensures consistency across all told.io touchpoints and communications.
+        <div className={`text-center py-8 border-t ${darkMode ? "border-slate-700" : "border-gray-200"}`}>
+          <p className={`mb-4 ${darkMode ? "text-gray-300" : "text-gray-600"}`}>
+            This brand guide ensures consistency across all told.io touchpoints and communications in both light and
+            dark modes.
           </p>
-          <p className="text-sm text-gray-500">Last updated: January 2024 • Version 1.0</p>
+          <p className={`text-sm ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
+            Last updated: January 2024 • Version 2.0 (Dark Mode Extended)
+          </p>
         </div>
       </div>
     </div>
